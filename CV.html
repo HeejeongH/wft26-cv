@@ -6,12 +6,12 @@
 <title>WFT26 CV 요약표 생성기</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 :root{--navy:#1B3A6B;--blue:#2E6DB4;--lblue:#D6E4F7;--accblue:#EBF2FB;--bg:#F4F7FB;--white:#FFFFFF;--gray:#6B7280;--lgray:#E5EAF2;--border:#CBD5E1;--text:#1E293B;--success:#16A34A;--warn:#B45309;--error:#DC2626}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 header{background:var(--navy);padding:20px 32px}
-header .logo{font-family:'DM Mono',monospace;color:#7EB3F0;font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.8}
+header .logo{color:#7EB3F0;font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.8}
 header h1{color:#fff;font-size:18px;font-weight:700;margin:4px 0 2px}
 header .sub{color:#7EB3F0;font-size:12px;font-weight:300}
 .container{max-width:900px;margin:0 auto;padding:28px 20px}
@@ -33,7 +33,7 @@ header .sub{color:#7EB3F0;font-size:12px;font-weight:300}
 .qi-icon{font-size:18px;flex-shrink:0;margin-top:1px}
 .qi-info{flex:1;min-width:0}
 .qi-name{font-weight:700;color:var(--navy);font-size:13px}
-.qi-detail{font-size:11px;color:var(--gray);margin-top:2px;font-family:'DM Mono',monospace}
+.qi-detail{font-size:11px;color:var(--gray);margin-top:2px}
 .qi-status{font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
 .qi-status.ok{color:var(--success)}.qi-status.err{color:var(--error)}.qi-status.ing{color:var(--blue)}.qi-status.wait{color:var(--gray)}
 .spinner-sm{width:14px;height:14px;border:2px solid #93C5FD;border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;display:inline-block;vertical-align:middle;margin-right:4px}
@@ -94,7 +94,9 @@ input[type=text]:focus{border-color:var(--blue)}
   </div>
 </div>
 <script>
+
 const SPEAKERS_DB = {"최은정": {"name_ko": "최은정", "name_en": "CHOIEUNJEONG", "org_ko": "상명대", "org_en": "Sangmyung University", "title_ko": "부총장", "title_en": "Vice President", "role": "좌장", "session_name": "서울 X 월드 푸드테크 비즈니스", "session_code": "P41", "date": "2026-06-09", "time": "13:00-14:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "이민우": {"name_ko": "이민우", "name_en": "Lee minwoo", "org_ko": "휴스턴대", "org_en": "University of Houston", "title_ko": "교수", "title_en": "Prof.", "role": "연사", "session_name": "서울 X 월드 푸드테크 비즈니스", "session_code": "P41", "date": "2026-06-09", "time": "13:00-14:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "최영덕": {"name_ko": "최영덕", "name_en": "CHOIYEONGDEOK", "org_ko": "토기", "org_en": "togi", "title_ko": "대표", "title_en": "CEO", "role": "연사", "session_name": "서울 X 월드 푸드테크 비즈니스", "session_code": "P41", "date": "2026-06-09", "time": "13:00-14:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "배세원": {"name_ko": "배세원", "name_en": "Se Won Bae", "org_ko": "국립공주대학교", "org_en": "Kongju National University", "title_ko": "자연과학대 화학과 교수", "title_en": "Prof.", "role": "좌장", "session_name": "공주 X 친환경푸드포장", "session_code": "P42", "date": "2026-06-09", "time": "15:00-16:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "고봉균": {"name_ko": "고봉균", "name_en": "Ko Bongkyun", "org_ko": "FITI시험연구원", "org_en": "FITI Testing & Research Institute", "title_ko": "ESG 인증센터장", "title_en": "Director & Head of ESG Certification Center", "role": "연사", "session_name": "공주 X 친환경푸드포장", "session_code": "P42", "date": "2026-06-09", "time": "15:00-16:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "박기호": {"name_ko": "박기호", "name_en": "Park kiho", "org_ko": "동원시스템즈", "org_en": "Dongwon Systems Advanced Film", "title_ko": "첨단필름사업부문 첨단필름실 개발실장", "title_en": "Head of Development Division", "role": "연사", "session_name": "공주 X 친환경푸드포장", "session_code": "P42", "date": "2026-06-09", "time": "15:00-16:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "김승기": {"name_ko": "김승기", "name_en": "KIM SEUNG KI", "org_ko": "애터미", "org_en": "ATOMY CO.LTD.", "title_ko": "글로벌 마케팅본부 이사", "title_en": "Director", "role": "연사", "session_name": "공주 X 친환경푸드포장", "session_code": "P42", "date": "2026-06-09", "time": "15:00-16:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "이명기": {"name_ko": "이명기", "name_en": "LEE MYEONGGI", "org_ko": "한국식품안전관리인증원", "org_en": "Korea Agency of HACCP Accreditation and Services", "title_ko": "인증심사본부 인증기획팀장", "title_en": "Team Manager", "role": "패널", "session_name": "공주 X 친환경푸드포장", "session_code": "P42", "date": "2026-06-09", "time": "15:00-16:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "김성호": {"name_ko": "김성호", "name_en": "KIM SEONGHO", "org_ko": "충남도청", "org_en": "Chungcheongnam-do Provincial Government", "title_ko": "바이오산업과장", "title_en": "Senior Manager", "role": "패널", "session_name": "공주 X 친환경푸드포장", "session_code": "P42", "date": "2026-06-09", "time": "15:00-16:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "김준우": {"name_ko": "김준우", "name_en": "KIM JUNWOO", "org_ko": "인하대", "org_en": "INHA UNIVERSITY", "title_ko": "교수", "title_en": "Prof.", "role": "연사", "session_name": "인천 X 스마트푸드유통", "session_code": "P43", "date": "2026-06-10", "time": "10:00-11:40", "pres_title_ko": "바이오 식품소재 글로벌 공급망 관리에서의 AI 기술의 역할", "session_type": "퍼블릭"}, "조성원": {"name_ko": "조성원", "name_en": "CHOSEONGWON", "org_ko": "포스코DX", "org_en": "POSCO DX COMPANY LTD.", "title_ko": "상무", "title_en": "General Partner", "role": "연사", "session_name": "인천 X 스마트푸드유통", "session_code": "P43", "date": "2026-06-10", "time": "10:00-11:40", "pres_title_ko": "Physical AI 시대의 Food AX 전략", "session_type": "퍼블릭"}, "조성일": {"name_ko": "조성일", "name_en": "JO SEONGIL", "org_ko": "정식품 자연과사람들", "org_en": "Nature & People", "title_ko": "부장", "title_en": "Head of Department", "role": "연사", "session_name": "인천 X 스마트푸드유통", "session_code": "P43", "date": "2026-06-10", "time": "10:00-11:40", "pres_title_ko": "FoodTech 시대의 Demand Management", "session_type": "퍼블릭"}, "오학룡": {"name_ko": "오학룡", "name_en": "Hak-Ryong Oh", "org_ko": "인천푸드테크협회", "org_en": "Incheon FoodTech Association", "title_ko": "이사", "title_en": "Director", "role": "패널", "session_name": "인천 X 스마트푸드유통", "session_code": "P43", "date": "2026-06-10", "time": "10:00-11:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "최예은": {"name_ko": "최예은", "name_en": "Ye-Eun Choi", "org_ko": "나눔엔젤스", "org_en": "Nanuhm Angels", "title_ko": "상무", "title_en": "General Partner", "role": "사회", "session_name": "인천 X 스마트푸드유통", "session_code": "P43", "date": "2026-06-10", "time": "10:00-11:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "장한수": {"name_ko": "장한수", "name_en": "JANG HANSU", "org_ko": "전북바이오융합산업진흥원", "org_en": "Jeonbuk Institute for Food-Bioindustry (JIF)", "title_ko": "본부장님", "title_en": "Headquarter Manager", "role": "좌장", "session_name": "전북 X 친환경푸드포장", "session_code": "P44", "date": "2026-06-10", "time": "13:00-14:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "문병근": {"name_ko": "문병근", "name_en": "MUN BYEONGGEUN", "org_ko": "한국건설생활환경시험연구원", "org_en": "", "title_ko": "수석", "title_en": "", "role": "연사", "session_name": "전북 X 친환경푸드포장", "session_code": "P44", "date": "2026-06-10", "time": "13:00-14:40", "pres_title_ko": "EU 포장재 및 포장폐기물 규정의 이해와 기업 대응", "session_type": "퍼블릭"}, "도한솔": {"name_ko": "도한솔", "name_en": "Hansol Doh", "org_ko": "이화여대", "org_en": "Ewha Womans University", "title_ko": "교수", "title_en": "Prof.", "role": "연사", "session_name": "전북 X 친환경푸드포장", "session_code": "P44", "date": "2026-06-10", "time": "13:00-14:40", "pres_title_ko": "국내외 친환경 식품 포장재의 기술개발 동향 및 사례", "session_type": "퍼블릭"}, "유하경": {"name_ko": "유하경", "name_en": "YU HAKYOUNG", "org_ko": "소프트팩", "org_en": "SOFTPACK CO", "title_ko": "대표", "title_en": "CEO", "role": "연사", "session_name": "전북 X 친환경푸드포장", "session_code": "P44", "date": "2026-06-10", "time": "13:00-14:40", "pres_title_ko": "식품기업의 친환경 포장 적용 사례와 생분해 소재 상용화 전략", "session_type": "퍼블릭"}, "조중상": {"name_ko": "조중상", "name_en": "CHO JOONGSANG", "org_ko": "한국식품산업클러스터진흥원", "org_en": "The Food Industry Promotional Agency of Korea", "title_ko": "부장", "title_en": "Head of Department", "role": "패널", "session_name": "전북 X 친환경푸드포장", "session_code": "P44", "date": "2026-06-10", "time": "13:00-14:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "윤찬석": {"name_ko": "윤찬석", "name_en": "Chan Suk Yoon", "org_ko": "에버켐텍", "org_en": "EverChemTech", "title_ko": "연구소장", "title_en": "R\\&D Director", "role": "패널", "session_name": "전북 X 친환경푸드포장", "session_code": "P44", "date": "2026-06-10", "time": "13:00-14:40", "pres_title_ko": "\"친환경 포장재 산업현장의 주요 이슈", "session_type": "퍼블릭"}, "김선범": {"name_ko": "김선범", "name_en": "Seon Beom Kim", "org_ko": "부산대학교", "org_en": "Pusan National University", "title_ko": "교수", "title_en": "Prof.", "role": "좌장", "session_name": "밀양 X 푸드스마트유통", "session_code": "P45", "date": "2026-06-10", "time": "15:00-16:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "최정희": {"name_ko": "최정희", "name_en": "\"CHOI JEONGHUI \"", "org_ko": "한식연", "org_en": "Korea Food Research Institute", "title_ko": "박사", "title_en": "Ph.D.", "role": "연사", "session_name": "밀양 X 푸드스마트유통", "session_code": "P45", "date": "2026-06-10", "time": "15:00-16:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "이상길": {"name_ko": "이상길", "name_en": "LEE SANGGIL", "org_ko": "부경대", "org_en": "Pukyong National University", "title_ko": "교수", "title_en": "Prof.", "role": "좌장", "session_name": "부산 X 블루푸드테크", "session_code": "P46", "date": "2026-06-11", "time": "10:00-11:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "이정현": {"name_ko": "이정현", "name_en": "Jung-Hyun Lee", "org_ko": "한국해양과학기술원", "org_en": "Korea Institute of Ocean Science & Technology", "title_ko": "책임(前부원장)", "title_en": "Senior Research Scientist", "role": "연사", "session_name": "부산 X 블루푸드테크", "session_code": "P46", "date": "2026-06-11", "time": "10:00-11:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "안철우": {"name_ko": "안철우", "name_en": "AHN CHEOLWOO", "org_ko": "바다플랫폼", "org_en": "Vada PF", "title_ko": "대표", "title_en": "CEO", "role": "연사", "session_name": "부산 X 블루푸드테크", "session_code": "P46", "date": "2026-06-11", "time": "10:00-11:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "곽호정": {"name_ko": "곽호정", "name_en": "Hojung Kwak", "org_ko": "부경대", "org_en": "Pukyong National University", "title_ko": "교수", "title_en": "Prof.", "role": "패널", "session_name": "부산 X 블루푸드테크", "session_code": "P46", "date": "2026-06-11", "time": "10:00-11:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "박태식": {"name_ko": "박태식", "name_en": "Tae-Sik Park", "org_ko": "가천대", "org_en": "Gachon University", "title_ko": "교수", "title_en": "Prof.", "role": "좌장", "session_name": "성남 X 3D프린팅푸드 (소부장)", "session_code": "P47", "date": "2026-06-11", "time": "13:00-14:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "이진규": {"name_ko": "이진규", "name_en": "LEE JINKYU", "org_ko": "이화여대", "org_en": "Ewha Womans University", "title_ko": "교수", "title_en": "Prof.", "role": "연사", "session_name": "성남 X 3D프린팅푸드 (소부장)", "session_code": "P47", "date": "2026-06-11", "time": "13:00-14:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "조성호": {"name_ko": "조성호", "name_en": "Cho Sungho", "org_ko": "KTR SW안전평가팀", "org_en": "Korea Testing & Research Institute", "title_ko": "팀장", "title_en": "Team Manager", "role": "연사", "session_name": "성남 X 3D프린팅푸드 (소부장)", "session_code": "P47", "date": "2026-06-11", "time": "13:00-14:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "지관근": {"name_ko": "지관근", "name_en": "JI KWANGKUN", "org_ko": "성남산업단지관리공단", "org_en": "Management Corporation For Sungnam Industrial Complex", "title_ko": "전무", "title_en": "Senior Managing Director", "role": "패널", "session_name": "성남 X 3D프린팅푸드 (소부장)", "session_code": "P47", "date": "2026-06-11", "time": "13:00-14:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "정영민": {"name_ko": "정영민", "name_en": "JEONG YEONGMIN", "org_ko": "성남시푸드테크산학협의체", "org_en": "Seongnam City FoodTech Industry-Academia Council", "title_ko": "회장", "title_en": "Chairman", "role": "패널", "session_name": "성남 X 3D프린팅푸드 (소부장)", "session_code": "P47", "date": "2026-06-11", "time": "13:00-14:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "유대웅": {"name_ko": "유대웅", "name_en": "Daeung Yu", "org_ko": "창원대", "org_en": "Changwon National University", "title_ko": "교수", "title_en": "Prof.", "role": "좌장", "session_name": "전남 X 김 푸드테크", "session_code": "P48", "date": "2026-06-11", "time": "15:00-16:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "이인태": {"name_ko": "이인태", "name_en": "Lee IN Tae", "org_ko": "해양수산정책연구소", "org_en": "Research Institute for Coastal Environment and Fishery-Policy", "title_ko": "대표", "title_en": "CEO", "role": "연사", "session_name": "전남 X 김 푸드테크", "session_code": "P48", "date": "2026-06-11", "time": "15:00-16:40", "pres_title_ko": "국제마른김 거래소 설립 및 운영방안", "session_type": "퍼블릭"}, "김지웅": {"name_ko": "김지웅", "name_en": "Ji Woong Kim", "org_ko": "부경대", "org_en": "Pukyong National University", "title_ko": "교수", "title_en": "Prof.", "role": "연사", "session_name": "전남 X 김 푸드테크", "session_code": "P48", "date": "2026-06-11", "time": "15:00-16:40", "pres_title_ko": "김산업발전방향(충남사례)", "session_type": "퍼블릭"}, "이상건": {"name_ko": "이상건", "name_en": "Lee sang-Geon", "org_ko": "한국해양수산개발원", "org_en": "Research Department K-Fish information Center", "title_ko": "박사", "title_en": "Ph.D.", "role": "연사", "session_name": "전남 X 김 푸드테크", "session_code": "P48", "date": "2026-06-11", "time": "15:00-16:40", "pres_title_ko": "글로벌 김 교역 및 소비 동향", "session_type": "퍼블릭"}, "이영은": {"name_ko": "이영은", "name_en": "Yeong Eun Lee", "org_ko": "동원F\\&B", "org_en": "Dongwon F\\&B", "title_ko": "책임연구원", "title_en": "Senior Researcher", "role": "패널", "session_name": "전남 X 김 푸드테크", "session_code": "P48", "date": "2026-06-11", "time": "15:00-16:40", "pres_title_ko": "", "session_type": "퍼블릭"}, "양태용": {"name_ko": "양태용", "name_en": "", "org_ko": "한국김수출협회", "org_en": "Korea Gim Exporters Association", "title_ko": "회장", "title_en": "Chairman", "role": "패널", "session_name": "전남 X 김 푸드테크", "session_code": "P48", "date": "2026-06-11", "time": "15:00-16:40", "pres_title_ko": "", "session_type": "퍼블릭"}};
+const API_KEY = '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';
 let items = [];
 
 function handleFiles(files) {
@@ -118,7 +120,7 @@ function readFile(item) {
   reader.onload = e => {
     item.fileData = e.target.result.split(',')[1];
     const matched = matchByFilename(item.file.name);
-    if (matched) { item.matched = true; item.speaker = { ...matched }; }
+    if (matched) { item.matched = true; item.speaker = Object.assign({}, matched); }
     else { item.matched = false; }
     item.status = 'ready';
     updateQueueItem(item);
@@ -159,7 +161,10 @@ function queueItemClass(item) {
 
 function queueItemHTML(item) {
   const sp = item.speaker;
-  let icon = '📄', nameHtml = '<span style="color:var(--gray)">' + item.file.name + '</span>', detailHtml = '', statusHtml = '<span class="qi-status wait">대기 중</span>';
+  let icon = '📄', nameHtml, detailHtml = '', statusHtml;
+  nameHtml = '<span style="color:var(--gray)">' + item.file.name + '</span>';
+  statusHtml = '<span class="qi-status wait">대기 중</span>';
+
   if (item.status === 'loading') {
     statusHtml = '<span class="qi-status ing">읽는 중...</span>';
   } else if (item.status === 'ready' && item.matched && sp) {
@@ -188,7 +193,7 @@ function queueItemHTML(item) {
     detailHtml = item.errorMsg || '오류 발생';
     statusHtml = '<span class="qi-status err">오류</span>';
   }
-  return `<span class="qi-icon">${icon}</span><div class="qi-info"><div class="qi-name">${nameHtml}</div>${detailHtml ? '<div class="qi-detail">' + detailHtml + '</div>' : ''}<div id="manual-${item.id}" class="manual-fields"></div></div><div>${statusHtml}</div>`;
+  return '<span class="qi-icon">' + icon + '</span><div class="qi-info"><div class="qi-name">' + nameHtml + '</div>' + (detailHtml ? '<div class="qi-detail">' + detailHtml + '</div>' : '') + '<div id="manual-' + item.id + '" class="manual-fields"></div></div><div>' + statusHtml + '</div>';
 }
 
 function openManual(id) {
@@ -198,7 +203,7 @@ function openManual(id) {
   if (!div) return;
   item._manualRole = '연사';
   div.className = 'manual-fields open';
-  div.innerHTML = `<div class="role-mini" id="role-mini-${id}"><button onclick="setRole('${id}','좌장')">좌장</button><button onclick="setRole('${id}','연사')" class="active">연사</button><button onclick="setRole('${id}','패널')">패널</button></div><div class="field-row"><div><label>성명</label><input type="text" id="m_name_${id}" placeholder="홍길동"></div><div><label>소속</label><input type="text" id="m_org_${id}"></div></div><div class="field-row"><div><label>직위</label><input type="text" id="m_title_${id}"></div><div><label>세션명</label><input type="text" id="m_session_${id}"></div></div><div><label>발표 제목</label><input type="text" id="m_pres_${id}" style="margin-bottom:8px"></div><button class="btn btn-primary btn-sm" onclick="applyManual('${id}')">적용</button>`;
+  div.innerHTML = '<div class="role-mini" id="role-mini-' + id + '"><button onclick="setRole('' + id + '','좌장')">좌장</button><button onclick="setRole('' + id + '','연사')" class="active">연사</button><button onclick="setRole('' + id + '','패널')">패널</button></div><div class="field-row"><div><label>성명</label><input type="text" id="m_name_' + id + '" placeholder="홍길동"></div><div><label>소속</label><input type="text" id="m_org_' + id + '"></div></div><div class="field-row"><div><label>직위</label><input type="text" id="m_title_' + id + '"></div><div><label>세션명</label><input type="text" id="m_session_' + id + '"></div></div><div><label>발표 제목</label><input type="text" id="m_pres_' + id + '" style="margin-bottom:8px"></div><button class="btn btn-primary btn-sm" onclick="applyManual('' + id + '')">적용</button>';
 }
 
 function setRole(id, role) {
@@ -210,8 +215,19 @@ function setRole(id, role) {
 function applyManual(id) {
   const item = items.find(i => i.id === id);
   if (!item) return;
-  item.speaker = { name_ko: document.getElementById('m_name_'+id)?.value.trim()||'', name_en:'', org_ko: document.getElementById('m_org_'+id)?.value.trim()||'', org_en:'', title_ko: document.getElementById('m_title_'+id)?.value.trim()||'', title_en:'', role: item._manualRole||'연사', session_name: document.getElementById('m_session_'+id)?.value.trim()||'', pres_title_ko: document.getElementById('m_pres_'+id)?.value.trim()||'' };
-  item.matched = true; item.status = 'ready';
+  item.speaker = {
+    name_ko: document.getElementById('m_name_' + id) ? document.getElementById('m_name_' + id).value.trim() : '',
+    name_en: '',
+    org_ko: document.getElementById('m_org_' + id) ? document.getElementById('m_org_' + id).value.trim() : '',
+    org_en: '',
+    title_ko: document.getElementById('m_title_' + id) ? document.getElementById('m_title_' + id).value.trim() : '',
+    title_en: '',
+    role: item._manualRole || '연사',
+    session_name: document.getElementById('m_session_' + id) ? document.getElementById('m_session_' + id).value.trim() : '',
+    pres_title_ko: document.getElementById('m_pres_' + id) ? document.getElementById('m_pres_' + id).value.trim() : ''
+  };
+  item.matched = true;
+  item.status = 'ready';
   updateQueueItem(item);
 }
 
@@ -226,7 +242,9 @@ function updateProgress() {
 
 async function startAll() {
   document.getElementById('startBtn').disabled = true;
-  for (const item of items.filter(i => !i.matched && i.fileData)) await extractNameFromCV(item);
+  for (const item of items.filter(i => !i.matched && i.fileData)) {
+    await extractNameFromCV(item);
+  }
   for (const item of items) {
     if (item.speaker && item.fileData) await analyzeOne(item);
     else { item.status = 'error'; item.errorMsg = '연사 정보 없음'; updateQueueItem(item); }
@@ -235,100 +253,131 @@ async function startAll() {
 }
 
 async function extractNameFromCV(item) {
-  item.status = 'processing'; updateQueueItem(item);
+  item.status = 'processing';
+  updateQueueItem(item);
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', { method:'POST', headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}, body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:100, system:'CV에서 인물의 한국어 성명만 반환하세요. 이름만, 다른 텍스트 없이.', messages:[{role:'user',content:[{type:'document',source:{type:'base64',media_type:item.fileType==='pdf'?'application/pdf':'application/vnd.openxmlformats-officedocument.wordprocessingml.document',data:item.fileData}},{type:'text',text:'이 CV의 주인공 이름(한국어)?'}]}]}) });
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 100,
+        system: 'CV에서 인물의 한국어 성명만 반환하세요. 이름만, 다른 텍스트 없이.',
+        messages: [{ role: 'user', content: [
+          { type: 'document', source: { type: 'base64', media_type: item.fileType === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', data: item.fileData } },
+          { type: 'text', text: '이 CV의 주인공 이름(한국어)?' }
+        ]}]
+      })
+    });
     const data = await res.json();
-    const name = (data.content?.[0]?.text||'').trim();
+    const name = (data.content && data.content[0] ? data.content[0].text : '').trim();
     const sp = SPEAKERS_DB[name] || Object.values(SPEAKERS_DB).find(s => s.name_en && name && s.name_en.toLowerCase().includes(name.toLowerCase()));
-    if (sp) { item.matched = true; item.speaker = { ...sp }; }
-    else { item.speaker = { name_ko: name, name_en:'', org_ko:'', org_en:'', title_ko:'', title_en:'', role:'연사', session_name:'', pres_title_ko:'' }; item.matched = false; }
-    item.status = 'ready'; updateQueueItem(item);
+    if (sp) { item.matched = true; item.speaker = Object.assign({}, sp); }
+    else { item.speaker = { name_ko: name, name_en: '', org_ko: '', org_en: '', title_ko: '', title_en: '', role: '연사', session_name: '', pres_title_ko: '' }; item.matched = false; }
+    item.status = 'ready';
+    updateQueueItem(item);
   } catch(e) { item.status = 'error'; item.errorMsg = e.message; updateQueueItem(item); }
 }
 
 async function analyzeOne(item) {
-  item.status = 'processing'; updateQueueItem(item);
+  item.status = 'processing';
+  updateQueueItem(item);
   const sp = item.speaker;
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', { method:'POST', headers:{'Content-Type':'application/json','x-api-key':'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','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}, body: JSON.stringify({
-      model:'claude-sonnet-4-20250514', max_tokens:400,
-      system:'CV를 분석하여 핵심 이력 3~4줄을 요약합니다. 반드시 JSON만 반환: {"bio":["줄1","줄2","줄3"]}',
-      messages:[{role:'user',content:[
-        {type:'document',source:{type:'base64',media_type:item.fileType==='pdf'?'application/pdf':'application/vnd.openxmlformats-officedocument.wordprocessingml.document',data:item.fileData}},
-        {type:'text',text:`연사: ${sp.name_ko} / ${sp.org_ko} / ${sp.title_ko}\n학력·주요 경력·현직 중심으로 3~4줄 이력 요약을 JSON으로 작성해 주세요.`}
-      ]}]
-    }) });
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 400,
+        system: 'CV를 분석하여 핵심 이력 3~4줄을 요약합니다. 반드시 JSON만 반환: {"bio":["줄1","줄2","줄3"]}',
+        messages: [{ role: 'user', content: [
+          { type: 'document', source: { type: 'base64', media_type: item.fileType === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', data: item.fileData } },
+          { type: 'text', text: '연사: ' + sp.name_ko + ' / ' + sp.org_ko + ' / ' + sp.title_ko + '\n학력·주요 경력·현직 중심으로 3~4줄 이력 요약을 JSON으로 작성해 주세요.' }
+        ]}]
+      })
+    });
     const data = await res.json();
-    const raw = (data.content?.[0]?.text||'').replace(/```json|```/g,'').trim();
+    const raw = (data.content && data.content[0] ? data.content[0].text : '').replace(/```json|```/g, '').trim();
     let parsed;
-    try { parsed = JSON.parse(raw); } catch { parsed = { bio: [raw] }; }
-    item.result = { bio: Array.isArray(parsed.bio) ? parsed.bio : [String(parsed.bio||'')] };
-    item.status = 'done'; updateQueueItem(item);
+    try { parsed = JSON.parse(raw); } catch(e) { parsed = { bio: [raw] }; }
+    item.result = { bio: Array.isArray(parsed.bio) ? parsed.bio : [String(parsed.bio || '')] };
+    item.status = 'done';
+    updateQueueItem(item);
   } catch(e) { item.status = 'error'; item.errorMsg = e.message; updateQueueItem(item); }
 }
 
 async function buildDocx(item) {
-  const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, AlignmentType, BorderStyle, WidthType, ShadingType, VerticalAlign } = docx;
-  const NAVY='1B3A6B',BLUE='2E6DB4',LBLUE='D6E4F7',ACCBLUE='EBF2FB',WHITE='FFFFFF',MGRAY='CCCCCC';
-  const b1={style:BorderStyle.SINGLE,size:1,color:MGRAY};
-  const bAll={top:b1,bottom:b1,left:b1,right:b1};
-  const bNone={top:{style:BorderStyle.NONE,size:0,color:WHITE},bottom:{style:BorderStyle.NONE,size:0,color:WHITE},left:{style:BorderStyle.NONE,size:0,color:WHITE},right:{style:BorderStyle.NONE,size:0,color:WHITE}};
-  const sp=item.speaker, bio=item.result?.bio||[];
-  const roleLabel=sp.role==='좌장'?'좌장 (Chair)':sp.role==='연사'?'연사 (Speaker)':sp.role==='패널'?'패널 (Panelist)':'사회자 (MC)';
-  const roleColor=sp.role==='좌장'?'1A3A6B':sp.role==='연사'?'1A5C2A':sp.role==='패널'?'7A4200':'4A1A6B';
-  const roleFill=sp.role==='좌장'?'D6E4F7':sp.role==='연사'?'D6F0E0':sp.role==='패널'?'FFF0D6':'EDE0F7';
-  function lc(t,w){return new TableCell({borders:bAll,width:{size:w,type:WidthType.DXA},shading:{fill:LBLUE,type:ShadingType.CLEAR},verticalAlign:VerticalAlign.CENTER,margins:{top:80,bottom:80,left:140,right:120},children:[new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:t,size:19,bold:true,font:'Arial',color:NAVY})]})]}); }
-  function vc(t,w){return new TableCell({borders:bAll,width:{size:w,type:WidthType.DXA},shading:{fill:WHITE,type:ShadingType.CLEAR},margins:{top:80,bottom:80,left:140,right:120},children:[new Paragraph({children:[new TextRun({text:t||'—',size:19,font:'Arial',color:'222222'})]})]}); }
-  function lcm(t,w,r){return new TableCell({borders:bAll,width:{size:w,type:WidthType.DXA},rowSpan:r,shading:{fill:LBLUE,type:ShadingType.CLEAR},verticalAlign:VerticalAlign.CENTER,margins:{top:80,bottom:80,left:140,right:120},children:[new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:t,size:19,bold:true,font:'Arial',color:NAVY})]})]}); }
-  function vcm(lines,w,r){const ch=lines.map(l=>new Paragraph({spacing:{before:0,after:40},children:[new TextRun({text:l,size:19,font:'Arial',color:'222222'})]}));while(ch.length<r)ch.push(new Paragraph({children:[]}));return new TableCell({borders:bAll,width:{size:w,type:WidthType.DXA},rowSpan:r,shading:{fill:WHITE,type:ShadingType.CLEAR},margins:{top:80,bottom:80,left:140,right:120},children:ch}); }
-  function ec(w){return new TableCell({borders:bAll,width:{size:w,type:WidthType.DXA},shading:{fill:WHITE,type:ShadingType.CLEAR},margins:{top:80,bottom:80,left:140,right:120},children:[new Paragraph({children:[]})]}); }
-  function gap(pt){return new Paragraph({children:[],spacing:{before:pt*20,after:0}}); }
-  const bR=Math.max(bio.length,3);
-  const bioRows=[new TableRow({children:[lcm('연사 이력',1600,bR),vcm(bio,7600,bR)]})];
-  for(let i=1;i<bR;i++) bioRows.push(new TableRow({children:[ec(7600)]}));
-  const doc2 = new Document({sections:[{properties:{page:{size:{width:11906,height:16838},margin:{top:900,right:900,bottom:900,left:900}}},children:[
-    new Table({width:{size:9200,type:WidthType.DXA},columnWidths:[9200],rows:[new TableRow({children:[new TableCell({borders:bNone,shading:{fill:NAVY,type:ShadingType.CLEAR},margins:{top:160,bottom:140,left:240,right:240},children:[
-      new Paragraph({spacing:{before:0,after:40},children:[new TextRun({text:'World FoodTech 2026 ConfEx  |  WFT26',size:18,font:'Arial',color:'AACCEE'})]}),
-      new Paragraph({spacing:{before:0,after:40},children:[new TextRun({text:'발표자 소개 요약표',size:32,bold:true,font:'Arial',color:WHITE})]}),
-      new Paragraph({spacing:{before:0,after:0},children:[new TextRun({text:'※ 이 자료는 세션 진행 시 좌장님의 발표자 소개를 위한 참고 자료입니다.',size:17,font:'Arial',color:'BBDDEE'})]}),
-    ]})]})]}),
+  const D = docx;
+  const NAVY='1B3A6B', BLUE='2E6DB4', LBLUE='D6E4F7', ACCBLUE='EBF2FB', WHITE='FFFFFF', MGRAY='CCCCCC';
+  const b1 = { style: D.BorderStyle.SINGLE, size: 1, color: MGRAY };
+  const bAll = { top: b1, bottom: b1, left: b1, right: b1 };
+  const bNone = { top: { style: D.BorderStyle.NONE, size: 0, color: WHITE }, bottom: { style: D.BorderStyle.NONE, size: 0, color: WHITE }, left: { style: D.BorderStyle.NONE, size: 0, color: WHITE }, right: { style: D.BorderStyle.NONE, size: 0, color: WHITE } };
+  const sp = item.speaker, bio = item.result ? item.result.bio : [];
+  const roleLabel = sp.role === '좌장' ? '좌장 (Chair)' : sp.role === '연사' ? '연사 (Speaker)' : sp.role === '패널' ? '패널 (Panelist)' : '사회자 (MC)';
+  const roleColor = sp.role === '좌장' ? '1A3A6B' : sp.role === '연사' ? '1A5C2A' : sp.role === '패널' ? '7A4200' : '4A1A6B';
+  const roleFill = sp.role === '좌장' ? 'D6E4F7' : sp.role === '연사' ? 'D6F0E0' : sp.role === '패널' ? 'FFF0D6' : 'EDE0F7';
+
+  function lc(t, w) { return new D.TableCell({ borders: bAll, width: { size: w, type: D.WidthType.DXA }, shading: { fill: LBLUE, type: D.ShadingType.CLEAR }, verticalAlign: D.VerticalAlign.CENTER, margins: { top: 80, bottom: 80, left: 140, right: 120 }, children: [new D.Paragraph({ alignment: D.AlignmentType.CENTER, children: [new D.TextRun({ text: t, size: 19, bold: true, font: 'Arial', color: NAVY })] })] }); }
+  function vc(t, w) { return new D.TableCell({ borders: bAll, width: { size: w, type: D.WidthType.DXA }, shading: { fill: WHITE, type: D.ShadingType.CLEAR }, margins: { top: 80, bottom: 80, left: 140, right: 120 }, children: [new D.Paragraph({ children: [new D.TextRun({ text: t || '—', size: 19, font: 'Arial', color: '222222' })] })] }); }
+  function lcm(t, w, r) { return new D.TableCell({ borders: bAll, width: { size: w, type: D.WidthType.DXA }, rowSpan: r, shading: { fill: LBLUE, type: D.ShadingType.CLEAR }, verticalAlign: D.VerticalAlign.CENTER, margins: { top: 80, bottom: 80, left: 140, right: 120 }, children: [new D.Paragraph({ alignment: D.AlignmentType.CENTER, children: [new D.TextRun({ text: t, size: 19, bold: true, font: 'Arial', color: NAVY })] })] }); }
+  function vcm(lines, w, r) { const ch = lines.map(l => new D.Paragraph({ spacing: { before: 0, after: 40 }, children: [new D.TextRun({ text: l, size: 19, font: 'Arial', color: '222222' })] })); while (ch.length < r) ch.push(new D.Paragraph({ children: [] })); return new D.TableCell({ borders: bAll, width: { size: w, type: D.WidthType.DXA }, rowSpan: r, shading: { fill: WHITE, type: D.ShadingType.CLEAR }, margins: { top: 80, bottom: 80, left: 140, right: 120 }, children: ch }); }
+  function ec(w) { return new D.TableCell({ borders: bAll, width: { size: w, type: D.WidthType.DXA }, shading: { fill: WHITE, type: D.ShadingType.CLEAR }, margins: { top: 80, bottom: 80, left: 140, right: 120 }, children: [new D.Paragraph({ children: [] })] }); }
+  function gap(pt) { return new D.Paragraph({ children: [], spacing: { before: pt * 20, after: 0 } }); }
+
+  const bR = Math.max(bio.length, 3);
+  const bioRows = [new D.TableRow({ children: [lcm('연사 이력', 1600, bR), vcm(bio, 7600, bR)] })];
+  for (let i = 1; i < bR; i++) bioRows.push(new D.TableRow({ children: [ec(7600)] }));
+
+  const document = new D.Document({ sections: [{ properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 900, right: 900, bottom: 900, left: 900 } } }, children: [
+    new D.Table({ width: { size: 9200, type: D.WidthType.DXA }, columnWidths: [9200], rows: [new D.TableRow({ children: [new D.TableCell({ borders: bNone, shading: { fill: NAVY, type: D.ShadingType.CLEAR }, margins: { top: 160, bottom: 140, left: 240, right: 240 }, children: [
+      new D.Paragraph({ spacing: { before: 0, after: 40 }, children: [new D.TextRun({ text: 'World FoodTech 2026 ConfEx  |  WFT26', size: 18, font: 'Arial', color: 'AACCEE' })] }),
+      new D.Paragraph({ spacing: { before: 0, after: 40 }, children: [new D.TextRun({ text: '발표자 소개 요약표', size: 32, bold: true, font: 'Arial', color: WHITE })] }),
+      new D.Paragraph({ spacing: { before: 0, after: 0 }, children: [new D.TextRun({ text: '※ 이 자료는 세션 진행 시 좌장님의 발표자 소개를 위한 참고 자료입니다.', size: 17, font: 'Arial', color: 'BBDDEE' })] })
+    ] })] })] }),
     gap(8),
-    new Table({width:{size:9200,type:WidthType.DXA},columnWidths:[1800,7400],rows:[new TableRow({children:[
-      new TableCell({borders:bAll,width:{size:1800,type:WidthType.DXA},shading:{fill:roleFill,type:ShadingType.CLEAR},verticalAlign:VerticalAlign.CENTER,margins:{top:100,bottom:100,left:140,right:120},children:[new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:roleLabel,size:22,bold:true,font:'Arial',color:roleColor})]})]}),
-      new TableCell({borders:bAll,width:{size:7400,type:WidthType.DXA},shading:{fill:ACCBLUE,type:ShadingType.CLEAR},margins:{top:80,bottom:80,left:140,right:120},children:[new Paragraph({children:[new TextRun({text:'세션: ',size:19,bold:true,font:'Arial',color:NAVY}),new TextRun({text:sp.session_name||'',size:19,font:'Arial',color:'222222'})]})]}),
-    ]})]}),
+    new D.Table({ width: { size: 9200, type: D.WidthType.DXA }, columnWidths: [1800, 7400], rows: [new D.TableRow({ children: [
+      new D.TableCell({ borders: bAll, width: { size: 1800, type: D.WidthType.DXA }, shading: { fill: roleFill, type: D.ShadingType.CLEAR }, verticalAlign: D.VerticalAlign.CENTER, margins: { top: 100, bottom: 100, left: 140, right: 120 }, children: [new D.Paragraph({ alignment: D.AlignmentType.CENTER, children: [new D.TextRun({ text: roleLabel, size: 22, bold: true, font: 'Arial', color: roleColor })] })] }),
+      new D.TableCell({ borders: bAll, width: { size: 7400, type: D.WidthType.DXA }, shading: { fill: ACCBLUE, type: D.ShadingType.CLEAR }, margins: { top: 80, bottom: 80, left: 140, right: 120 }, children: [new D.Paragraph({ children: [new D.TextRun({ text: '세션: ', size: 19, bold: true, font: 'Arial', color: NAVY }), new D.TextRun({ text: sp.session_name || '', size: 19, font: 'Arial', color: '222222' })] })] })
+    ] })] }),
     gap(10),
-    new Table({width:{size:9200,type:WidthType.DXA},columnWidths:[1600,3600,1600,2400],rows:[
-      new TableRow({children:[lc('성명',1600),vc(sp.name_ko,3600),lc('소속',1600),vc(sp.org_ko,2400)]}),
-      new TableRow({children:[lc('직위',1600),vc(sp.title_ko,3600),lc('발표 제목',1600),vc(sp.pres_title_ko,2400)]}),
-    ]}),
+    new D.Table({ width: { size: 9200, type: D.WidthType.DXA }, columnWidths: [1600, 3600, 1600, 2400], rows: [
+      new D.TableRow({ children: [lc('성명', 1600), vc(sp.name_ko, 3600), lc('소속', 1600), vc(sp.org_ko, 2400)] }),
+      new D.TableRow({ children: [lc('직위', 1600), vc(sp.title_ko, 3600), lc('발표 제목', 1600), vc(sp.pres_title_ko, 2400)] })
+    ] }),
     gap(10),
-    new Table({width:{size:9200,type:WidthType.DXA},columnWidths:[1600,7600],rows:bioRows}),
+    new D.Table({ width: { size: 9200, type: D.WidthType.DXA }, columnWidths: [1600, 7600], rows: bioRows }),
     gap(8),
-    new Paragraph({spacing:{before:0,after:0},border:{top:{style:BorderStyle.SINGLE,size:4,color:BLUE}},children:[new TextRun({text:'작성일: ',size:17,font:'Arial',color:'888888'}),new TextRun({text:new Date().toLocaleDateString('ko-KR'),size:17,font:'Arial',color:'333333'}),new TextRun({text:'   담당 스태프: ',size:17,font:'Arial',color:'888888'})]}),
-  ]}]});
-  return Packer.toBlob(doc2);
+    new D.Paragraph({ spacing: { before: 0, after: 0 }, border: { top: { style: D.BorderStyle.SINGLE, size: 4, color: BLUE } }, children: [new D.TextRun({ text: '작성일: ', size: 17, font: 'Arial', color: '888888' }), new D.TextRun({ text: new Date().toLocaleDateString('ko-KR'), size: 17, font: 'Arial', color: '333333' }), new D.TextRun({ text: '   담당 스태프: ', size: 17, font: 'Arial', color: '888888' })] })
+  ] }] });
+
+  return D.Packer.toBlob(document);
 }
 
 async function downloadOne(id) {
   const item = items.find(i => i.id === id);
-  if (!item?.result) return;
+  if (!item || !item.result) return;
   const blob = await buildDocx(item);
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = `CV요약표_${item.speaker.name_ko||'연사'}_WFT26.docx`; a.click();
+  a.href = url;
+  a.download = 'CV요약표_' + (item.speaker.name_ko || '연사') + '_WFT26.docx';
+  a.click();
   URL.revokeObjectURL(url);
 }
 
 async function downloadAll() {
-  for (const item of items.filter(i => i.status === 'done')) { await downloadOne(item.id); await new Promise(r => setTimeout(r, 300)); }
+  for (const item of items.filter(i => i.status === 'done')) {
+    await downloadOne(item.id);
+    await new Promise(r => setTimeout(r, 300));
+  }
 }
 
 const zone = document.getElementById('uploadZone');
-zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
-zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('dragover'); });
+zone.addEventListener('dragleave', function() { zone.classList.remove('dragover'); });
+zone.addEventListener('drop', function(e) { e.preventDefault(); zone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+
 </script>
 </body>
 </html>
